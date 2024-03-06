@@ -1,62 +1,54 @@
-import RPi.GPIO as GPIO
-import time
+from machine import Pin, PWM
+import utime
 
 # Motor Connections (Both must use PWM pins)
-RPWM = 5
-LPWM = 6
+RPWM = 0  # Replace with the actual GPIO pin number for RPWM
+LPWM = 1  # Replace with the actual GPIO pin number for LPWM
 
-# Set the GPIO mode to BCM
-GPIO.setmode(GPIO.BCM)
-
-# Set motor connections as outputs
-GPIO.setup(RPWM, GPIO.OUT)
-GPIO.setup(LPWM, GPIO.OUT)
+# Set up the GPIO pins as outputs
+rpwm_pin = Pin(RPWM, Pin.OUT)
+lpwm_pin = Pin(LPWM, Pin.OUT)
 
 # Create PWM objects for RPWM and LPWM
-rpwm_pwm = GPIO.PWM(RPWM, 1000)  # 1000 Hz PWM frequency
-lpwm_pwm = GPIO.PWM(LPWM, 1000)  # 1000 Hz PWM frequency
-
-# Stop motors
-rpwm_pwm.start(0)
-lpwm_pwm.start(0)
+rpwm_pwm = PWM(rpwm_pin, freq=1000, duty=0)
+lpwm_pwm = PWM(lpwm_pin, freq=1000, duty=0)
 
 try:
     while True:
         # Accelerate forward
-        GPIO.output(RPWM, GPIO.LOW)
+        rpwm_pwm.duty(0)
         for i in range(255):
-            lpwm_pwm.ChangeDutyCycle(i)
-            time.sleep(0.02)
+            lpwm_pwm.duty(i)
+            utime.sleep_ms(20)
 
-        time.sleep(1)
+        utime.sleep(1)
 
         # Decelerate forward
         for i in range(255, -1, -1):
-            lpwm_pwm.ChangeDutyCycle(i)
-            time.sleep(0.02)
+            lpwm_pwm.duty(i)
+            utime.sleep_ms(20)
 
-        time.sleep(0.5)
+        utime.sleep(0.5)
 
         # Accelerate reverse
-        GPIO.output(LPWM, GPIO.LOW)
+        lpwm_pwm.duty(0)
         for i in range(255):
-            rpwm_pwm.ChangeDutyCycle(i)
-            time.sleep(0.02)
+            rpwm_pwm.duty(i)
+            utime.sleep_ms(20)
 
-        time.sleep(1)
+        utime.sleep(1)
 
         # Decelerate reverse
         for i in range(255, -1, -1):
-            rpwm_pwm.ChangeDutyCycle(i)
-            time.sleep(0.02)
+            rpwm_pwm.duty(i)
+            utime.sleep_ms(20)
 
-        time.sleep(0.5)
+        utime.sleep(0.5)
 
 except KeyboardInterrupt:
     pass
 
 finally:
-    # Cleanup GPIO on exit
-    rpwm_pwm.stop()
-    lpwm_pwm.stop()
-    GPIO.cleanup()
+    # Stop PWM and clean up GPIO on exit
+    rpwm_pwm.deinit()
+    lpwm_pwm.deinit()
