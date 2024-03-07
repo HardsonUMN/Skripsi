@@ -8,8 +8,6 @@ encoder_channel_B = 17
 # Define driver pin
 RPWM = 2
 LPWM = 3
-R_EN = 4
-L_EN = 5
 
 # Set up the GPIO pins as outputs
 RPWM_pin = Pin(RPWM, Pin.OUT)
@@ -33,6 +31,11 @@ encoder_position = 0
 prev_state_A = encoder_A.value()
 prev_state_B = encoder_B.value()
 
+def stop_motors():
+    RPWM_pwm.duty_u16(0)
+    LPWM_pwm.duty_u16(0)
+    
+
 def encoder():
     global encoder_position, prev_state_A, prev_state_B
     # Read the current state of the encoder channels
@@ -55,16 +58,19 @@ def encoder():
     # Print the current encoder position and encoder values
     print("Encoder Position: {}, Encoder Values: A={}, B={}".format(encoder_position, current_state_A, current_state_B))
 
-    # Add a small delay to control the speed of reading
-    utime.sleep_ms(10)
-
-def drive_motor():
     
+def drive_motor(R,L):
+    RPWM_pwm.duty_u16(R*256)
+    LPWM_pwm.duty_u16(L*256)
+    print(R)
 
 try:
     while True:
         encoder()
-        
+        drive_motor(0,255)
+        # Add a small delay to control the speed of reading
+        utime.sleep_ms(10)
 
 except KeyboardInterrupt:
+    stop_motors()
     pass
