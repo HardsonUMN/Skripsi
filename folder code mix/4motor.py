@@ -5,7 +5,7 @@ import utime
 encoder_channels = [(8, 9), (26, 27), (10, 11), (20, 21)]  # Each tuple contains (channel_A, channel_B) pins for an encoder
 
 # Define driver pins for motors
-motor_pins = [(6, 7), (19, 18), (14, 15), (17, 16)]  # Each tuple contains (RPWM, LPWM) pins for a motor
+motor_pins = [(6, 7), (18, 19), (14, 15), (16, 17)]  # Each tuple contains (RPWM, LPWM) pins for a motor
 
 # Set up the GPIO pins as outputs for motors
 motors = []
@@ -74,7 +74,7 @@ timer = Timer()
 try:
     # Run all motors forward for 5 seconds
     for motor_index in range(len(motor_pins)):
-        drive_motor(motor_index, 0, 15)
+        drive_motor(motor_index, 0, 100)
     timer.init(mode=Timer.ONE_SHOT, period=3000, callback=stop_and_measure)
     
 
