@@ -1,5 +1,5 @@
-from machine import Pin, PWM, Timer
-import utime
+from machine import Pin, PWM, Timer, UART
+import utime, time
 
 #motor 1 depan kiri, 2 depan kanan, 3 belakang kiri, 4 belakang kanan
 
@@ -71,58 +71,88 @@ def stop_and_measure(timer):
         encoder(i)  # Take encoder measurements for all encoders
         
 def case_maju():
-    drive_motor(0, 0, 255)
-    drive_motor(1, 0, 255)
-    drive_motor(2, 255, 0)
-    drive_motor(3, 255, 0)
+    drive_motor(0, 0, 75)
+    drive_motor(1, 0, 75)
+    drive_motor(2, 0, 75)
+    drive_motor(3, 0, 75)
     
 def case_mundur():
-    drive_motor(0, 0, 255)
-    drive_motor(1, 0, 255)
-    drive_motor(2, 255, 0)
-    drive_motor(3, 255, 0)
+    drive_motor(0, 75, 0)
+    drive_motor(1, 75, 0)
+    drive_motor(2, 75, 0)
+    drive_motor(3, 75, 0)
     
 def case_kiri():
-    drive_motor(0, 0, 255)
-    drive_motor(1, 0, 255)
-    drive_motor(2, 255, 0)
-    drive_motor(3, 255, 0)
+    drive_motor(0, 100, 0)
+    drive_motor(1, 0, 100)
+    drive_motor(2, 0, 100)
+    drive_motor(3, 100, 0)
     
 def case_kanan():
-    drive_motor(0, 0, 255)
-    drive_motor(1, 0, 255)
-    drive_motor(2, 255, 0)
-    drive_motor(3, 255, 0)
+    drive_motor(0, 0, 100)
+    drive_motor(1, 100, 0)
+    drive_motor(2, 100, 0)
+    drive_motor(3, 0, 100)
+    
+def case_cw():
+    drive_motor(0, 0, 75)
+    drive_motor(1, 75, 0)
+    drive_motor(2, 0, 75)
+    drive_motor(3, 75, 0)
+    
+def case_ccw():
+    drive_motor(0, 75, 0)
+    drive_motor(1, 0, 75)
+    drive_motor(2, 75, 0)
+    drive_motor(3, 0, 75)
         
 def case_default():
+    stop_motors()
     print("Default case")
     
-def switch_case(argument):
-    if case == 1:
+def switch_case(case):
+    if case == "1":
         case_maju()
-    elif case == 2:
+    elif case == "2":
         case_mundur()
-    elif case == 3:
-        handle_case3()
+    elif case == "3":
+        case_kiri()
+    elif case == "4":
+        case_kanan()
+    elif case == "5":
+        case_cw()
+    elif case == "6":
+        case_ccw()
     else:
-        case_default():
-        
-    func = switcher.get(argument, case_default)
-    func()
+        case_default()
 
 # Create a Timer object
 timer = Timer()
 
 try:
-    user_input = input("enter number: ")
-    print("you entere: ", user_input)
-    switch_case(user_input)
+    """# Define UART pins (TX, RX)
+    uart = UART(0, baudrate=9600, tx=Pin(0), rx=Pin(1))  # Adjust pins accordingly
+
+    # Wait for UART to initialize
+    time.sleep(2)
+
+    # Read data from UART
+    received_data = uart.read()
+    print("Received Data:", received_data.decode())
+    switch_case(received_data.decode())
+    uart.deinit()"""
+     
+    while True:
+        user_input = input("enter number: ")
+        print("you entere: ", user_input)
+        switch_case(user_input)
+    
     # Run all motors forward for 5 seconds
     """for motor_index in range(len(motor_pins)):
         drive_motor(motor_index, 0, 15)
     timer.init(mode=Timer.ONE_SHOT, period=3000, callback=stop_and_measure)"""
     
-
 except KeyboardInterrupt:
     stop_motors()
+    uart.deinit()
     pass
