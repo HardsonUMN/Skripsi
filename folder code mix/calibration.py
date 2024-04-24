@@ -1,5 +1,7 @@
-from machine import Pin, PWM, Timer
-import utime
+from machine import Pin, PWM, Timer, UART
+import utime, time
+
+#motor 1 depan kiri, 2 depan kanan, 3 belakang kiri, 4 belakang kanan
 
 # Define GPIO pins for each encoder channel
 encoder_channels = [(8, 9), (26, 27), (10, 11), (20, 21)]  # Each tuple contains (channel_A, channel_B) pins for an encoder
@@ -58,51 +60,104 @@ def encoder(encoder_index):
     # Print the current encoder position and encoder values
     print("Encoder {}: Position: {}, Values: A={}, B={}".format(encoder_index, encoder_positions[encoder_index], current_state[0], current_state[1]))
 
-def drive_motor(index):
-    motor1_RPWM, motor1_LPWM = motors[0]
-    motor2_RPWM, motor2_LPWM = motors[1]
-    motor3_RPWM, motor3_LPWM = motors[2]
-    motor4_RPWM, motor4_LPWM = motors[3]
-    
-    motor1_RPWM = 255
-    motor1_LPWM = 255
-    motor2_RPWM = 255
-    motor2_LPWM = 255
-    motor3_RPWM = 255
-    motor3_LPWM = 255
-    motor4_RPWM = 255
-    motor4_LPWM = 255
-    
-    encoder(index)
-    
-def drive_motorz(motor_index, R, L):
+def drive_motor(motor_index, R, L):
     rpwm, lpwm = motors[motor_index]
     rpwm.duty_u16(R * 256)
     lpwm.duty_u16(L * 256)
 
+def stop_and_measure(timer):
+    stop_motors()  # Stop all motors
+    for i in range(len(encoder_channels)):
+        encoder(i)  # Take encoder measurements for all encoders
 
-def timer_callback(timer):
-    stop_motor()
+#motor 1 depan kiri, 2 depan kanan, 3 belakang kiri, 4 belakang kanan
+def case_stop():
+    stop_motors()
         
-def map_value(value, from_low, from_high, to_low, to_high):
-    return (value - from_low) * (to_high - to_low) // (from_high - from_low) + to_low
+def case_maju():
+    drive_motor(0, 0, 255)
+    drive_motor(1, 0, 255)
+    drive_motor(2, 255, 0)
+    drive_motor(3, 255, 0)
+    
+def case_mundur():
+    drive_motor(0, 255, 0)
+    drive_motor(1, 255, 0)
+    drive_motor(2, 0, 255)
+    drive_motor(3, 0, 255)
+    
+def case_kiri():
+    drive_motor(0, 255, 0)
+    drive_motor(1, 0, 255)
+    drive_motor(2, 255, 0)
+    drive_motor(3, 0, 255)
+    
+def case_kanan():
+    drive_motor(0, 0, 255)
+    drive_motor(1, 255, 0)
+    drive_motor(2, 0, 255)
+    drive_motor(3, 255, 0)
 
-''''# Usage example:
-sensor_value = 512  # Example sensor value
-mapped_value = map_value(sensor_value, 0, 1023, 0, 255)  # Map sensor value to range 0-255
-print(mapped_value)  # Output the mapped value'''
+def case_d_kanan_fr():
+def case_d_kiri_fr():
+def case_d_kanan_bw():
+def case_d_kiri_bw():
 
+def case_cw():
+    drive_motor(0, 0, 255)
+    drive_motor(2, 255, 0)
+    drive_motor(1, 255, 0)
+    drive_motor(3, 0, 255)
+
+def case_ccw():
+    drive_motor(0, 255, 0)
+    drive_motor(2, 0, 255)
+    drive_motor(1, 0, 255)
+    drive_motor(3, 255, 0)
+        
+def case_default():
+    print("Default case")
+    
+def switch_case(argument):
+    if case == 1:
+        case_maju()
+    elif case == 2:
+        case_mundur()
+    elif case == 3:
+        handle_case3()
+    else:
+        case_default():
+        
+    func = switcher.get(argument, case_default)
+    func()
 
 # Create a Timer object
 timer = Timer()
 
 try:
+    """"# Define UART pins (TX, RX)
+    uart = UART(0, baudrate=9600, tx=Pin(0), rx=Pin(1))  # Adjust pins accordingly
+
+    # Wait for UART to initialize
+    time.sleep(2)
+
+    # Read data from UART
+    received_data = uart.read()
+    print("Received Data:", received_data.decode())
+    switch_case(received_data.decode())
+    uart.deinit()"""
+
+    user_input = input("enter number: ")
+    print("you entere: ", user_input)
+    switch_case(user_input)
+
     # Run all motors forward for 5 seconds
-    for index in range(len(motor_pins)):
-        drive_motor(index)
-    timer.init(mode=Timer.ONE_SHOT, period=5000, callback=timer_callback)
+    """for motor_index in range(len(motor_pins)):
+        drive_motor(motor_index, 0, 15)
+    timer.init(mode=Timer.ONE_SHOT, period=3000, callback=stop_and_measure)"""
     
 
 except KeyboardInterrupt:
     stop_motors()
+    uart.deinit()
     pass
