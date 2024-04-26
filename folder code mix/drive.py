@@ -67,32 +67,30 @@ def drive_motor(motor_index, R, L):
 
 def stop_and_measure(timer):
     stop_motors()  # Stop all motors
-    for i in range(len(encoder_channels)):
-        encoder(i)  # Take encoder measurements for all encoders
         
 def case_maju():
-    drive_motor(0, 0, 75)
-    drive_motor(1, 0, 75)
-    drive_motor(2, 0, 75)
-    drive_motor(3, 0, 75)
+    drive_motor(0, 0, 150)
+    drive_motor(1, 0, 150)
+    drive_motor(2, 0, 150)
+    drive_motor(3, 0, 150)
     
 def case_mundur():
-    drive_motor(0, 75, 0)
-    drive_motor(1, 75, 0)
-    drive_motor(2, 75, 0)
-    drive_motor(3, 75, 0)
+    drive_motor(0, 150, 0)
+    drive_motor(1, 150, 0)
+    drive_motor(2, 150, 0)
+    drive_motor(3, 150, 0)
     
 def case_kiri():
-    drive_motor(0, 100, 0)
-    drive_motor(1, 0, 100)
-    drive_motor(2, 0, 100)
-    drive_motor(3, 100, 0)
+    drive_motor(0, 150, 0)
+    drive_motor(1, 0, 150)
+    drive_motor(2, 0, 150)
+    drive_motor(3, 150, 0)
     
 def case_kanan():
-    drive_motor(0, 0, 100)
-    drive_motor(1, 100, 0)
-    drive_motor(2, 100, 0)
-    drive_motor(3, 0, 100)
+    drive_motor(0, 0, 150)
+    drive_motor(1, 150, 0)
+    drive_motor(2, 150, 0)
+    drive_motor(3, 0, 150)
     
 def case_cw():
     drive_motor(0, 0, 75)
@@ -111,17 +109,17 @@ def case_default():
     print("Default case")
     
 def switch_case(case):
-    if case == "1":
+    if case == "8":
         case_maju()
-    elif case == "2":
-        case_mundur()
-    elif case == "3":
-        case_kiri()
-    elif case == "4":
-        case_kanan()
     elif case == "5":
-        case_cw()
+        case_mundur()
+    elif case == "4":
+        case_kiri()
     elif case == "6":
+        case_kanan()
+    elif case == "3":
+        case_cw()
+    elif case == "1":
         case_ccw()
     else:
         case_default()
@@ -154,5 +152,5 @@ try:
     
 except KeyboardInterrupt:
     stop_motors()
-    uart.deinit()
+    #uart.deinit()
     pass
