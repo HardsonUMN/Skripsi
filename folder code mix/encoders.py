@@ -112,74 +112,74 @@ def switch_case(case):
         case_default()
 
 def case_maju():
-    drive_motor(0, 0, pwm_send_fw)
+    drive_motor(0, 0, pwm_send_fw)#
     drive_motor(1, 0, pwm_front_fw)
-    drive_motor(2, 0, pwm_send_fw)
+    drive_motor(2, 0, pwm_send_fw)#
     drive_motor(3, 0, pwm_back_fw)
     
 def case_mundur():
-    drive_motor(0, pwm_send_bw, 0)
+    drive_motor(0, pwm_send_bw, 0)#
     drive_motor(1, pwm_front_bw, 0)
-    drive_motor(2, pwm_send_bw, 0)
+    drive_motor(2, pwm_send_bw, 0)#
     drive_motor(3, pwm_back_bw, 0)
 
 def case_kiri():
-    drive_motor(0, pwm_front_bw, 0)
+    drive_motor(0, pwm_send_bw, 0)#
     drive_motor(1, 0, pwm_front_fw)
-    drive_motor(2, 0, pwm_back_fw)
+    drive_motor(2, 0, pwm_send_fw)#
     drive_motor(3, pwm_back_bw, 0)
     
 def case_kanan():
-    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(0, 0, pwm_send_fw)#
     drive_motor(1, pwm_front_bw, 0)
-    drive_motor(2, pwm_back_bw, 0)
+    drive_motor(2, pwm_send_bw, 0)#
     drive_motor(3, 0, pwm_back_fw)
     
 def case_cw():
-    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(0, 0, pwm_send_fw)#
     drive_motor(1, pwm_front_bw, 0)
-    drive_motor(2, 0, pwm_back_fw)
+    drive_motor(2, 0, pwm_send_fw)#
     drive_motor(3, pwm_back_bw, 0)
     
 def case_ccw():
-    drive_motor(0, pwm_front_bw, 0)
+    drive_motor(0, pwm_send_bw, 0)#
     drive_motor(1, 0, pwm_front_fw)
-    drive_motor(2, pwm_back_bw, 0)
+    drive_motor(2, pwm_send_bw, 0)#
     drive_motor(3, 0, pwm_back_fw)
 
 def case_d_kanan_fw():
-    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(0, 0, pwm_send_fw)
     drive_motor(1, 0, 0)
     drive_motor(2, 0, 0)
-    drive_motor(3, 0, pwm_back_fw)
+    drive_motor(3, 0, pwm_send_fw)
 
 def case_d_kiri_fw():
     drive_motor(0, 0, 0)
-    drive_motor(1, 0, pwm_front_fw)
-    drive_motor(2, 0, pwm_back_fw)
+    drive_motor(1, 0, pwm_send_fw)
+    drive_motor(2, 0, pwm_send_fw)
     drive_motor(3, 0, 0)
     
 def case_d_kanan_bw():
     drive_motor(0, 0, 0)
-    drive_motor(1, pwm_front_bw, 0)
-    drive_motor(2, pwm_back_bw, 0)
+    drive_motor(1, pwm_send_bw, 0)
+    drive_motor(2, pwm_send_bw, 0)
     drive_motor(3, 0, 0)
     
 def case_d_kiri_bw():
-    drive_motor(0, pwm_front_bw, 0)
+    drive_motor(0, pwm_send_bw, 0)
     drive_motor(1, 0, 0)
     drive_motor(2, 0, 0)
-    drive_motor(3, pwm_back_bw, 0)
+    drive_motor(3, pwm_send_bw, 0)
     
 def case_pivotkanan():
-    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(0, 0, pwm_send_fw)
     drive_motor(1, 0, 0)
-    drive_motor(2, 0, pwm_back_fw)
+    drive_motor(2, 0, pwm_send_fw)
     drive_motor(3, 0, 0)
 
 def case_pivotatas():
-    drive_motor(0, 0, pwm_front_fw)
-    drive_motor(1, pwm_front_bw, 0)
+    drive_motor(0, 0, pwm_send_fw)
+    drive_motor(1, pwm_send_bw, 0)
     drive_motor(2, 0, 0)
     drive_motor(3, 0, 0)
         
@@ -200,7 +200,6 @@ def convert_8bit_to_16bit_pwm(pwm_8bit):
     const_front_bw = 1
     const_back_bw = 1"""
     
-    #
     # Scale the 8-bit PWM value to fit within the range of the 16-bit PWM
     pwm_16bit = (pwm_8bit / max_8bit_value) * max_16bit_value
     
