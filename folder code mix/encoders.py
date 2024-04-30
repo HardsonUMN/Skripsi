@@ -1,7 +1,6 @@
 from machine import Pin, PWM, Timer, UART
 import utime, time
 
-
 #motor 1 depan kiri, 2 depan kanan, 3 belakang kiri, 4 belakang kanan
 
 # Define GPIO pins for each encoder channel
@@ -79,17 +78,12 @@ def stop_motors():
     
 def drive_motor(motor_index, R, L):
     rpwm, lpwm = motors[motor_index]
-    rpwm.duty_u16(R * 256)
-    lpwm.duty_u16(L * 256)
-    
-#kalau 256 itu 8 bit, kalau 16 bit 65536
-
-"""def drive_motor(motor_index, R, L):
-    rpwm, lpwm = motors[motor_index]
     rpwm.duty_u16(R)
-    lpwm.duty_u16(L)"""
+    lpwm.duty_u16(L)
+    #kalau 256 itu 8 bit, kalau 16 bit 65535
     
 def switch_case(case):
+    #print (PWM_send, " ", const_front)
     if case == "8":
         case_maju()
     elif case == "5":
@@ -103,9 +97,9 @@ def switch_case(case):
     elif case == "1":
         case_ccw()
     elif case == "9":
-        case_d_kanan_fr()
+        case_d_kanan_fw()
     elif case == "7":
-        case_d_kiri_fr()
+        case_d_kiri_fw()
     elif case == "]":
         case_d_kanan_bw()
     elif case == "[":
@@ -117,114 +111,125 @@ def switch_case(case):
     else:
         case_default()
 
-"""def case_maju():
-    drive_motor(0, 0, 50)
-    drive_motor(1, 0, 50)
-    drive_motor(2, 0, 50)
-    drive_motor(3, 0, 50)
-    
-def case_mundur():
-    drive_motor(0, 50, 0)
-    drive_motor(1, 50, 0)
-    drive_motor(2, 50, 0)
-    drive_motor(3, 50, 0)"""
-
 def case_maju():
-    drive_motor(0, 0, 100)
-    drive_motor(1, 0, 100)
-    drive_motor(2, 0, 100)
-    drive_motor(3, 0, 100)
+    drive_motor(0, 0, pwm_send_fw)
+    drive_motor(1, 0, pwm_front_fw)
+    drive_motor(2, 0, pwm_send_fw)
+    drive_motor(3, 0, pwm_back_fw)
     
 def case_mundur():
-    drive_motor(0, 150, 0)
-    drive_motor(1, 150, 0)
-    drive_motor(2, 150, 0)
-    drive_motor(3, 150, 0)
+    drive_motor(0, pwm_send_bw, 0)
+    drive_motor(1, pwm_front_bw, 0)
+    drive_motor(2, pwm_send_bw, 0)
+    drive_motor(3, pwm_back_bw, 0)
 
-"""def case_maju():
-    drive_motor(0, 0, 23650)
-    drive_motor(1, 0, 23808)
-    drive_motor(2, 0, 24320)
-    drive_motor(3, 0, 23808)"""
-
-"""def case_maju():
-    drive_motor(0, 0, 93)
-    drive_motor(1, 0, 93)
-    drive_motor(2, 0, 95)
-    drive_motor(3, 0, 93)"""
-    
-def case_mundur():
-    drive_motor(0, 98, 0)
-    drive_motor(1, 95, 0)
-    drive_motor(2, 98, 0)
-    drive_motor(3, 95, 0)
-    
 def case_kiri():
-    drive_motor(0, 150, 0)
-    drive_motor(1, 0, 150)
-    drive_motor(2, 0, 150)
-    drive_motor(3, 150, 0)
+    drive_motor(0, pwm_front_bw, 0)
+    drive_motor(1, 0, pwm_front_fw)
+    drive_motor(2, 0, pwm_back_fw)
+    drive_motor(3, pwm_back_bw, 0)
     
 def case_kanan():
-    drive_motor(0, 0, 150)
-    drive_motor(1, 150, 0)
-    drive_motor(2, 150, 0)
-    drive_motor(3, 0, 150)
+    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(1, pwm_front_bw, 0)
+    drive_motor(2, pwm_back_bw, 0)
+    drive_motor(3, 0, pwm_back_fw)
     
 def case_cw():
-    drive_motor(0, 0, 75)
-    drive_motor(1, 75, 0)
-    drive_motor(2, 0, 75)
-    drive_motor(3, 75, 0)
+    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(1, pwm_front_bw, 0)
+    drive_motor(2, 0, pwm_back_fw)
+    drive_motor(3, pwm_back_bw, 0)
     
 def case_ccw():
-    drive_motor(0, 75, 0)
-    drive_motor(1, 0, 75)
-    drive_motor(2, 75, 0)
-    drive_motor(3, 0, 75)
+    drive_motor(0, pwm_front_bw, 0)
+    drive_motor(1, 0, pwm_front_fw)
+    drive_motor(2, pwm_back_bw, 0)
+    drive_motor(3, 0, pwm_back_fw)
 
-def case_d_kanan_fr():
-    drive_motor(0, 0, 100)
+def case_d_kanan_fw():
+    drive_motor(0, 0, pwm_front_fw)
     drive_motor(1, 0, 0)
     drive_motor(2, 0, 0)
-    drive_motor(3, 0, 100)
+    drive_motor(3, 0, pwm_back_fw)
 
-def case_d_kiri_fr():
+def case_d_kiri_fw():
     drive_motor(0, 0, 0)
-    drive_motor(1, 0, 100)
-    drive_motor(2, 0, 100)
+    drive_motor(1, 0, pwm_front_fw)
+    drive_motor(2, 0, pwm_back_fw)
     drive_motor(3, 0, 0)
     
 def case_d_kanan_bw():
     drive_motor(0, 0, 0)
-    drive_motor(1, 100, 0)
-    drive_motor(2, 100, 0)
+    drive_motor(1, pwm_front_bw, 0)
+    drive_motor(2, pwm_back_bw, 0)
     drive_motor(3, 0, 0)
     
 def case_d_kiri_bw():
-    drive_motor(0, 100, 0)
+    drive_motor(0, pwm_front_bw, 0)
     drive_motor(1, 0, 0)
     drive_motor(2, 0, 0)
-    drive_motor(3, 100, 0)
+    drive_motor(3, pwm_back_bw, 0)
     
 def case_pivotkanan():
-    drive_motor(0, 0, 150)
+    drive_motor(0, 0, pwm_front_fw)
     drive_motor(1, 0, 0)
-    drive_motor(2, 0, 150)
+    drive_motor(2, 0, pwm_back_fw)
     drive_motor(3, 0, 0)
 
 def case_pivotatas():
-    drive_motor(0, 0, 150)
-    drive_motor(1, 150, 0)
+    drive_motor(0, 0, pwm_front_fw)
+    drive_motor(1, pwm_front_bw, 0)
     drive_motor(2, 0, 0)
     drive_motor(3, 0, 0)
         
 def case_default():
     stop_motors()
     print("Default case")
+    
+def convert_8bit_to_16bit_pwm(pwm_8bit):
+    max_8bit_value = 255.00  # Maximum value for 8-bit PWM
+    max_16bit_value = 65535.00  # Maximum value for 16-bit PWM
+    const_front_fw = 1
+    const_back_fw = 1.1
+    const_front_bw = 1.05
+    const_back_bw = 1
+    
+    """const_front_fw = 1.12
+    const_back_fw = 1.12
+    const_front_bw = 1
+    const_back_bw = 1"""
+    
+    #
+    # Scale the 8-bit PWM value to fit within the range of the 16-bit PWM
+    pwm_16bit = (pwm_8bit / max_8bit_value) * max_16bit_value
+    
+    pwm_front_fw = pwm_16bit * const_front_fw 
+    pwm_back_fw = pwm_16bit * const_back_fw
+    pwm_front_bw = pwm_16bit * const_front_bw
+    pwm_back_bw = pwm_16bit * const_back_bw
 
-# Create a Timer object
+    # Round to the nearest integer
+    pwm_send_fw = int(round(pwm_16bit))
+    pwm_send_bw = int(round(pwm_16bit))
+    
+    pwm_front_fwx = int(round(pwm_front_fw)) 
+    pwm_back_fwx = int(round(pwm_back_fw))
+    pwm_front_bwx = int(round(pwm_front_bw))
+    pwm_back_bwx = int(round(pwm_back_bw))
+    
+    if pwm_front_bw <= 13000:
+        pwm_front_bw = pwm_front_bw + 3000
+    if pwm_back_bw <= 13000:
+        pwm_back_bw = pwm_front_bw + 3000
+    if pwm_send_bw <= 13000:
+        pwm_send_bw = pwm_send_bw + 3000
+        
+    return pwm_send_fw, pwm_send_bw, pwm_front_fwx, pwm_back_fwx, pwm_front_bwx, pwm_back_bwx
+
 timer = Timer()
+pwm_send_fw, pwm_send_bw, pwm_front_fw, pwm_back_fw, pwm_front_bw, pwm_back_bw = convert_8bit_to_16bit_pwm(100.0)
+
 
 try:
     """# Define UART pins (TX, RX)
@@ -243,8 +248,9 @@ try:
         user_input = input("enter number: ")
         print("you entered: ", user_input)
         switch_case(user_input)
-        for i in range(len(encoder_channels)):
-            print("Encoder", i+1, "RPM:", encoder_counts[i])
+        """for i in range(len(encoder_channels)):
+            print("Encoder", i+1, "RPM:", encoder_counts[i])"""
+        print(pwm_send_fw, ",", pwm_send_bw, " : ", pwm_front_fw, ",",pwm_back_fw, " : ", pwm_front_bw, ",", pwm_back_bw)
     
     # Run all motors forward for 5 seconds
     """for motor_index in range(len(motor_pins)):
