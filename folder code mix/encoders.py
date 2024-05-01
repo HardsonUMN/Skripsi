@@ -86,8 +86,12 @@ def switch_case(case):
     #print (PWM_send, " ", const_front)
     if case == "8":
         case_maju()
+        tahan_waktu(5000)
+        stop_motors()
     elif case == "5":
         case_mundur()
+        tahan_waktu(5000)
+        stop_motors()
     elif case == "4":
         case_kiri()
     elif case == "6":
@@ -190,10 +194,16 @@ def case_default():
 def convert_8bit_to_16bit_pwm(pwm_8bit):
     max_8bit_value = 255.00  # Maximum value for 8-bit PWM
     max_16bit_value = 65535.00  # Maximum value for 16-bit PWM
+    
     const_front_fw = 1
-    const_back_fw = 1.1
-    const_front_bw = 1.05
-    const_back_bw = 1
+    const_back_fw = 1 #backkkk
+    const_front_bw = 1
+    const_back_bw = 1 #backkkk
+    
+    """const_front_fw = 0.9329889901
+    const_back_fw = 0.92498 #backkkk
+    const_front_bw = 0.909
+    const_back_bw = 0.91322 #backkkk"""
     
     """const_front_fw = 1.12
     const_back_fw = 1.12
@@ -217,12 +227,12 @@ def convert_8bit_to_16bit_pwm(pwm_8bit):
     pwm_front_bwx = int(round(pwm_front_bw))
     pwm_back_bwx = int(round(pwm_back_bw))
     
-    if pwm_front_bw <= 13000:
+    """if pwm_front_bw <= 13000:
         pwm_front_bw = pwm_front_bw + 3000
     if pwm_back_bw <= 13000:
         pwm_back_bw = pwm_front_bw + 3000
     if pwm_send_bw <= 13000:
-        pwm_send_bw = pwm_send_bw + 3000
+        pwm_send_bw = pwm_send_bw + 3000"""
         
     return pwm_send_fw, pwm_send_bw, pwm_front_fwx, pwm_back_fwx, pwm_front_bwx, pwm_back_bwx
 
@@ -247,9 +257,9 @@ try:
         user_input = input("enter number: ")
         print("you entered: ", user_input)
         switch_case(user_input)
-        """for i in range(len(encoder_channels)):
-            print("Encoder", i+1, "RPM:", encoder_counts[i])"""
-        print(pwm_send_fw, ",", pwm_send_bw, " : ", pwm_front_fw, ",",pwm_back_fw, " : ", pwm_front_bw, ",", pwm_back_bw)
+        for i in range(len(encoder_channels)):
+            print("Encoder", i+1, "RPM:", encoder_counts[i])
+        #print(pwm_send_fw, ",", pwm_send_bw, " : ", pwm_front_fw, ",",pwm_back_fw, " : ", pwm_front_bw, ",", pwm_back_bw)
     
     # Run all motors forward for 5 seconds
     """for motor_index in range(len(motor_pins)):
