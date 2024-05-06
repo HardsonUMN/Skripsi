@@ -3,7 +3,7 @@ import os
 import serial
 
 serial_connected = 0
-if os.path.exists('/dev/ttyACM0') == True;
+if os.path.exists('/dev/ttyACM0') == True; #ganti x ke port yang dipake
     data_sensing = serial.Serial('/dev/ttyACM0', 115200)
     data_sensing.reset_input_buffer()
     serial_connected = 1
@@ -14,11 +14,11 @@ temp = []
 while True:
     if data_sensing.in_waiting > 0:
         temp[] = data_sensing.readline().decode('utf-8').rstrip()
-        if temp[0] == 'depan kiri':
+        if temp[2] == 'depan kiri':
             global depankiri
             depankiri = 16
-            if temp[1] < 16:
-                depankiri = temp[1]
+            if temp[3] < 16:
+                depankiri = temp[3]
             else:
                 pass
             
@@ -30,19 +30,19 @@ while True:
             else:
                 pass
                 
-        elif temp[0] == 'serong depan kiri':
+        elif temp[6] == 'serong depan kiri':
             global serongdepankanan
             serongdepankiri = 16
-            if temp[1] < 16:
-                serongdepankiri = temp[1]
+            if temp[7] < 16:
+                serongdepankiri = temp[7]
             else:
                 pass
                 
-        elif temp[0] == 'serong depan kanan':
+        elif temp[4] == 'serong depan kanan':
             global serongdepankanan
             serongdepankanan = 16
-            if temp[1] < 16:
-                serongdepankanan = temp[1]
+            if temp[5] < 16:
+                serongdepankanan = temp[5]
             else:
                 pass
                 
@@ -54,35 +54,35 @@ while True:
             else:
                 pass
                 
-        elif temp[0] == 'samping kanan depan':
+        elif temp[2] == 'samping kanan depan':
             global sampingkanandepan
             sampingkanandepan = 16
-            if temp[1] < 16:
-                sampingkanandepan = temp[1]
+            if temp[3] < 16:
+                sampingkanandepan = temp[3]
             else:
                 pass
                 
-        elif temp[0] == 'samping kiri belakang':
+        elif temp[4] == 'samping kiri belakang':
             global sampingkiribelakang
             sampingkiribelakang = 16
-            if temp[1] < 16:
-                sampingkiribelakang = temp[1]
+            if temp[5] < 16:
+                sampingkiribelakang = temp[5]
             else:
                 pass
                 
-        elif temp[0] == 'samping kanan belakang':
+        elif temp[6] == 'samping kanan belakang':
             global sampingkananbelakang
             sampingkananbelakang = 16
-            if temp[1] < 16:
-                sampingkananbelakang = temp[1]
+            if temp[7] < 16:
+                sampingkananbelakang = temp[7]
             else:
                 pass
                 
-        elif temp[0] == 'serong belakang kiri':
+        elif temp[2] == 'serong belakang kiri':
             global serongbelakangkiri
             serongbelakangkiri = 16
-            if temp[1] < 16:
-                serongbelakangkiri = temp[1]
+            if temp[3] < 16:
+                serongbelakangkiri = temp[3]
             else:
                 pass
                 
@@ -94,19 +94,19 @@ while True:
             else:
                 pass
                 
-        elif temp[0] == 'belakangkiri':
+        elif temp[4] == 'belakangkiri':
             global belakangkiri
             belakangkiri = 16
-            if temp[1] < 16:
-                belakangkiri = temp[1]
+            if temp[5] < 16:
+                belakangkiri = temp[5]
             else:
                 pass
                 
-        elif temp[0] == 'belakangkanan':
+        elif temp[6] == 'belakangkanan':
             global belakangkanan
             belakangkanan = 16
-            if temp[1] < 16:
-                belakangkanan = temp[1]
+            if temp[7] < 16:
+                belakangkanan = temp[7]
             else:
                 pass
             
@@ -141,5 +141,10 @@ while True:
             
     elif sampingkanandepan > sampingkiridepan:
         print("kanan")
+        
     elif sampingkanandepan < sampingkiridepan:
         print("kiri")
+    
+    elif depankanan <= 16 and depankiri <= 16 and sampingkanandepan <= 16 and sampingkiridepan <= 16:
+        print("mundur")
+        
