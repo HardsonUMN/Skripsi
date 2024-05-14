@@ -41,49 +41,6 @@ def timer_callback(timer):
         
         sensor_readings.clear()  # Reset readings
         sensor = 0  # Reset sensor count
-from machine import Timer
-import utime
-
-timer = Timer()
-machine.freq(200000000)
-global sensor_readings
-sensor_readings = []
-global sensor
-sensor = 0  # Initialize sensor count
-
-# Define pins Trig and Echo for each sensor along with orientation
-sensor_pins = [
-    {'trig': 29, 'echo': 23, 'orientation': 'depan_kanan'},
-    {'trig': 0, 'echo': 1, 'orientation': 'depan_kiri'},
-    {'trig': 27, 'echo': 28, 'orientation': 'serong_depan_kanan'},
-    {'trig': 2, 'echo': 3, 'orientation': 'serong_depan_kiri'},
-    {'trig': 22, 'echo': 26, 'orientation': 'samping_kanan_depan'},
-    {'trig': 18, 'echo': 19, 'orientation': 'samping_kanan_belakang'},
-    {'trig': 4, 'echo': 5, 'orientation': 'samping_kiri_depan'},
-    {'trig': 6, 'echo': 7, 'orientation': 'samping_kiri_belakang'},
-    {'trig': 16, 'echo': 17, 'orientation': 'serong_belakang_kanan'},
-    {'trig': 8, 'echo': 9, 'orientation': 'serong_belakang_kiri'},
-    {'trig': 14, 'echo': 15, 'orientation': 'belakang_kiri'},
-    {'trig': 12, 'echo': 13, 'orientation': 'belakang_kanan'},
-]
-
-# Configure sensor pins
-for sensor_pin in sensor_pins:
-    machine.Pin(sensor_pin['trig'], machine.Pin.OUT)
-    machine.Pin(sensor_pin['echo'], machine.Pin.IN)
-
-def timer_callback(timer):
-    global sensor  # Access the global sensor variable
-    for group in sensor_groups:
-        for sensor_info in group:
-            measure_distance(sensor_info['trig'], sensor_info['echo'], sensor_info['orientation'])
-    if sensor == 12:  # Check if all sensors are read
-        clean_data = [reading.rstrip("\r\n") for reading in sensor_readings]
-
-        print(", ".join(clean_data))
-        
-        sensor_readings.clear()  # Reset readings
-        sensor = 0  # Reset sensor count
 
 # Function to measure distance
 def measure_distance(trig_pin, echo_pin, orientation):
